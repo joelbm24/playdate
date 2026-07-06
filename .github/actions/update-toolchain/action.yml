@@ -21,7 +21,7 @@ runs:
   steps:
     - name: Install Taplo
       if: inputs.fmt == 'true'
-      uses: uncenter/setup-taplo@v1.0.8
+      uses: uncenter/setup-taplo@v2
       with:
         version: "0.9.3"
 
