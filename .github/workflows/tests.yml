@@ -531,7 +531,7 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Install Taplo
-        uses: uncenter/setup-taplo@v1.0.8
+        uses: uncenter/setup-taplo@v2
         with:
           version: "0.9.3"
 
