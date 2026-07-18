@@ -102,12 +102,12 @@ jobs:
           # - 2.6.2
     steps:
       - run: arch
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             target/
@@ -172,12 +172,12 @@ jobs:
           - ${{ inputs.sdk || 'latest' }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             target/
@@ -245,12 +245,12 @@ jobs:
           # - beta
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             target/
@@ -302,12 +302,12 @@ jobs:
           # - beta
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             target/
@@ -362,12 +362,12 @@ jobs:
           # - beta
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             target/
@@ -431,12 +431,12 @@ jobs:
           # - beta
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo
@@ -505,7 +505,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -531,7 +531,7 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Install Taplo
-        uses: uncenter/setup-taplo@v1.0.8
+        uses: uncenter/setup-taplo@v2
         with:
           version: "0.9.3"
 
@@ -580,7 +580,7 @@ jobs:
           - { name: win, key: windows-latest }
           - { name: linux, key: ubuntu-latest }
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref || github.ref }}
 
@@ -588,7 +588,7 @@ jobs:
         run: rustup component add clippy
 
       - name: Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             target/
@@ -645,7 +645,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Check
         id: check
         continue-on-error: true
@@ -677,7 +677,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Check
         id: crates
         uses: katyo/publish-crates@v2
