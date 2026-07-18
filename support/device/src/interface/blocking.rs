@@ -2,7 +2,7 @@ use crate::device::command::Command;
 use crate::error::Error;
 
 pub trait Out: In {
-	fn send_cmd(&self, cmd: Command) -> Result<usize, Error>;
+    fn send_cmd(&self, cmd: Command) -> Result<usize, Error>;
 }
 
 pub trait In {}

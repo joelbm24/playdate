@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-bindgen"
 version = "0.4.1"
@@ -53,18 +55,19 @@ required-features = ["cli"]
 
 [features]
 default = ["runtime", "documentation"]
-documentation = ["extra-codegen", "html2md", "html5ever", "markup5ever_rcdom"]
-extra-codegen = ["syn", "proc-macro2", "quote"]
+documentation = ["extra-codegen", "dep:html2md", "dep:html5ever", "dep:markup5ever_rcdom"]
+extra-codegen = ["dep:syn", "dep:proc-macro2", "dep:quote"]
 
 # bindgen options
 runtime = ["bindgen/runtime"]                            # runtime linking (dlopen)
 static = ["bindgen/static"]                              # static linking to clang
 logging = ["bindgen/logging", "utils/log"]
 pretty-please = ["bindgen/prettyplease", "prettyplease"]
-which-rustfmt = ["bindgen/which-rustfmt", "which"]
+prettyplease = ["dep:prettyplease"]
+which-rustfmt = ["bindgen/which-rustfmt", "dep:which"]
 
 cli = ["clap", "documentation", "extra-codegen", "pretty-please", "which-rustfmt"]
-
+clap = ["dep:clap"]
 
 [package.metadata.docs.rs]
 features = ["cli", "documentation", "extra-codegen"]

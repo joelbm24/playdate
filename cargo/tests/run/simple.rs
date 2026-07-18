@@ -15,84 +15,84 @@ use crate::common::*;
 
 
 fn run(crate_name: &str, crate_path: &Path, args: impl IntoIterator<Item = impl Into<OsString>>) -> Result<()> {
-	println!("crate: {crate_name}: {}", crate_path.display());
+    println!("crate: {crate_name}: {}", crate_path.display());
 
-	let value = test_value();
-	let target_dir = target_dir_rand();
-	let target_dir_arg = format!("--target-dir={}", target_dir.display());
-	let args = [OsString::from("run")].into_iter()
-	                                  .chain(args.into_iter().map(Into::into))
-	                                  .chain([OsString::from(target_dir_arg)]);
-	if !target_dir.exists() {
-		std::fs::create_dir_all(&target_dir)?;
-	}
+    let value = test_value();
+    let target_dir = target_dir_rand();
+    let target_dir_arg = format!("--target-dir={}", target_dir.display());
+    let args = [OsString::from("run")].into_iter()
+                                      .chain(args.into_iter().map(Into::into))
+                                      .chain([OsString::from(target_dir_arg)]);
+    if !target_dir.exists() {
+        std::fs::create_dir_all(&target_dir)?;
+    }
 
-	let mut cmd = Tool::command();
-	cmd.args(args);
-	cmd.current_dir(crate_path);
-	cmd.env(CARGO_PLAYDATE_TEST_VALUE_ENV, &value);
-
-
-	let expected_value = format!("{CARGO_PLAYDATE_TEST_VALUE_PREFIX}{value}");
-
-	let log_path = target_dir.join("stdout.log");
-	let file = File::create(&log_path)?;
-	cmd.stdout(Stdio::from(file));
-	let mut handle = cmd.spawn()?;
-
-	println!("cmd: {:?}", cmd);
-
-	let start = Instant::now();
-	let limit = Duration::from_secs(40);
+    let mut cmd = Tool::command();
+    cmd.args(args);
+    cmd.current_dir(crate_path);
+    cmd.env(CARGO_PLAYDATE_TEST_VALUE_ENV, &value);
 
 
-	while start.elapsed() < limit {
-		std::thread::sleep(Duration::from_millis(100))
-	}
+    let expected_value = format!("{CARGO_PLAYDATE_TEST_VALUE_PREFIX}{value}");
 
-	println!("timeout reached");
+    let log_path = target_dir.join("stdout.log");
+    let file = File::create(&log_path)?;
+    cmd.stdout(Stdio::from(file));
+    let mut handle = cmd.spawn()?;
 
-	let pid = handle.id();
-	#[cfg(unix)]
-	{
-		use nix::unistd::Pid;
-		use nix::sys::signal::{self, Signal};
-		signal::kill(
-		             Pid::from_raw(pid.try_into().expect("invalid PID")),
-		             Signal::SIGTERM, // mb. send SIGKILL?
-		).ok();
-	}
-	handle.kill()
-	      .unwrap_or_else(|_| panic!("Unable to kill child process (pid={pid}"));
+    println!("cmd: {:?}", cmd);
 
-	println!("Child process killed");
+    let start = Instant::now();
+    let limit = Duration::from_secs(40);
 
-	// take a time to flush:
-	std::thread::sleep(Duration::from_secs(4));
 
-	println!("Reading log");
+    while start.elapsed() < limit {
+        std::thread::sleep(Duration::from_millis(100))
+    }
 
-	let file = File::open(log_path)?;
-	let found = BufReader::new(file).lines()
-	                                .map_while(|r| r.ok())
-	                                .find(|line| line.trim().contains(&expected_value));
-	println!("Found expected value: {:?}", found);
+    println!("timeout reached");
 
-	assert!(found.is_some(), "Test value didn't found.");
+    let pid = handle.id();
+    #[cfg(unix)]
+    {
+        use nix::unistd::Pid;
+        use nix::sys::signal::{self, Signal};
+        signal::kill(
+                     Pid::from_raw(pid.try_into().expect("invalid PID")),
+                     Signal::SIGTERM, // mb. send SIGKILL?
+        ).ok();
+    }
+    handle.kill()
+          .unwrap_or_else(|_| panic!("Unable to kill child process (pid={pid}"));
 
-	Ok(())
+    println!("Child process killed");
+
+    // take a time to flush:
+    std::thread::sleep(Duration::from_secs(4));
+
+    println!("Reading log");
+
+    let file = File::open(log_path)?;
+    let found = BufReader::new(file).lines()
+                                    .map_while(|r| r.ok())
+                                    .find(|line| line.trim().contains(&expected_value));
+    println!("Found expected value: {:?}", found);
+
+    assert!(found.is_some(), "Test value didn't found.");
+
+    Ok(())
 }
 
 
 fn test_value() -> String {
-	use rand::RngCore;
-	let mut values = [0u8; 8];
-	rand::rng().fill_bytes(&mut values);
+    use rand::RngCore;
+    let mut values = [0u8; 8];
+    rand::rng().fill_bytes(&mut values);
 
-	values.into_iter().fold(String::new(), |mut acc, n| {
-		                  acc.push_str(&n.to_string());
-		                  acc
-	                  })
+    values.into_iter().fold(String::new(), |mut acc, n| {
+                          acc.push_str(&n.to_string());
+                          acc
+                      })
 }
 
 
@@ -100,24 +100,24 @@ fn test_value() -> String {
 #[cfg_attr(not(exec_tests),
            ignore = "execution tests not requested, set RUSTFLAGS='--cfg exec_tests' to enable.")]
 fn run_metadata_workspace_root_dev() -> Result<()> {
-	let crate_name = "test-workspace-main-crate";
-	let args = ["--simulator", "-p", crate_name, "--lib"].into_iter()
-	                                                     .map(OsStr::new);
-	let ws = metadata_workspace()?;
-	run(crate_name, ws, args)?;
+    let crate_name = "test-workspace-main-crate";
+    let args = ["--simulator", "-p", crate_name, "--lib"].into_iter()
+                                                         .map(OsStr::new);
+    let ws = metadata_workspace()?;
+    run(crate_name, ws, args)?;
 
-	Ok(())
+    Ok(())
 }
 
 #[test]
 #[cfg_attr(not(exec_tests),
            ignore = "execution tests not requested, set RUSTFLAGS='--cfg exec_tests' to enable.")]
 fn run_metadata_workspace_root_release() -> Result<()> {
-	let crate_name = "test-workspace-main-crate";
-	let args = ["--simulator", "-p", crate_name, "--lib", "--release"].into_iter()
-	                                                                  .map(OsStr::new);
-	let ws = metadata_workspace()?;
-	run(crate_name, ws, args)?;
+    let crate_name = "test-workspace-main-crate";
+    let args = ["--simulator", "-p", crate_name, "--lib", "--release"].into_iter()
+                                                                      .map(OsStr::new);
+    let ws = metadata_workspace()?;
+    run(crate_name, ws, args)?;
 
-	Ok(())
+    Ok(())
 }

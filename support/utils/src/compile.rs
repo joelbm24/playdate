@@ -24,7 +24,6 @@ pub const RUSTFLAGS_LIB_PLAYDATE: &[&str] = &["-Ctarget-cpu=cortex-m7",
                                               "-Ctarget-feature=-fp64",
                                               "-Clink-args=--emit-relocs",
                                               "-Crelocation-model=pic",
-                                              "-Csoft-float=no",
                                               "-Clink-arg=--cref",
                                               "-Clink-arg=--gc-sections"];
 /// For bin.
@@ -36,7 +35,6 @@ pub const RUSTFLAGS_BIN_PLAYDATE: &[&str] = &["-Ctarget-cpu=cortex-m7",
                                               "-Ctarget-feature=-fp64",
                                               "-Clink-args=--emit-relocs",
                                               "-Crelocation-model=pic",
-                                              "-Csoft-float=no",
                                               "-Clink-arg=--cref",
                                               "-Clink-arg=--gc-sections",
                                               "-Clink-arg=--entry=eventHandlerShim"];
@@ -54,40 +52,40 @@ pub const PDX_PKG_MANIFEST_FILENAME: &str = "pdxinfo";
 
 
 pub const fn dylib_suffix_for_host() -> &'static str {
-	if cfg!(target_os = "macos") {
-		"dylib"
-	} else if cfg!(unix) {
-		"so"
-	} else if cfg!(windows) {
-		"dll"
-	} else {
-		panic!("platform not supported");
-		#[cfg(all(not(unix), not(windows)))]
-		{
-			compile_error!("platform not supported")
-		}
-	}
+    if cfg!(target_os = "macos") {
+        "dylib"
+    } else if cfg!(unix) {
+        "so"
+    } else if cfg!(windows) {
+        "dll"
+    } else {
+        panic!("platform not supported");
+        #[cfg(all(not(unix), not(windows)))]
+        {
+            compile_error!("platform not supported")
+        }
+    }
 }
 
 pub const fn dylib_suffix_for_host_opt() -> Option<&'static str> {
-	if cfg!(target_os = "macos") {
-		Some("dylib")
-	} else if cfg!(unix) {
-		Some("so")
-	} else if cfg!(windows) {
-		Some("dll")
-	} else {
-		None
-	}
+    if cfg!(target_os = "macos") {
+        Some("dylib")
+    } else if cfg!(unix) {
+        Some("so")
+    } else if cfg!(windows) {
+        Some("dll")
+    } else {
+        None
+    }
 }
 
 pub fn dylib_suffix_for_opt(target_family: &str, target_os: &str) -> Option<&'static str> {
-	match target_family {
-		"unix" if target_os == "macos" => Some("dylib"),
-		"unix" => Some("so"),
-		"windows" => Some("dll"),
-		_ => None,
-	}
+    match target_family {
+        "unix" if target_os == "macos" => Some("dylib"),
+        "unix" => Some("so"),
+        "windows" => Some("dll"),
+        _ => None,
+    }
 }
 
 pub const fn static_lib_suffix() -> &'static str { "a" }

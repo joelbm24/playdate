@@ -20,55 +20,53 @@ const VIDEO_PATH: &Path = "examples/video.pdv";
 
 /// Game state
 struct State {
-	player: VideoPlayer<video::api::Cache, true>,
+    player: VideoPlayer<video::api::Cache, true>,
 
-	// Current frame
-	current: c_int,
-	// Number of frames
-	length: c_int,
+    // Current frame
+    current: c_int,
+    // Number of frames
+    length: c_int,
 }
 
 
 /// Entry point
-#[no_mangle]
+#[unsafe(no_mangle)]
 fn event_handler(api: NonNull<PlaydateAPI>, event: SystemEvent, _sim_key_code: u32) -> EventLoopCtrl {
-	// Ignore any other events, just for this minimalistic example
-	if !matches!(event, SystemEvent::Init) {
-		return EventLoopCtrl::Continue;
-	}
+    // Ignore any other events, just for this minimalistic example
+    if !matches!(event, SystemEvent::Init) {
+        return EventLoopCtrl::Continue;
+    }
 
-	// Set FPS
-	api.display().set_refresh_rate(20.0);
+    // Set FPS
+    api.display().set_refresh_rate(20.0);
 
-	// Create video player
-	let player = api.graphics().video().load(VIDEO_PATH).unwrap();
-	// Set draw-target to the screen
-	player.use_screen_context();
+    // Create video player
+    let player = api.graphics().video().load(VIDEO_PATH).unwrap();
+    // Set draw-target to the screen
+    player.use_screen_context();
 
-	// Register update handler
-	let system = api.system();
-	system.set_update_callback_boxed(
-	                                 move |state| {
-		                                 // Draw current frame of the player
-		                                 state.player.render_frame(state.current).unwrap();
+    // Register update handler
+    let system = api.system();
+    system.set_update_callback_boxed(move |state| {
+                                         // Draw current frame of the player
+                                         state.player.render_frame(state.current).unwrap();
 
-		                                 // Advance to the next frame
-		                                 state.current += 1;
-		                                 if state.current >= state.length {
-			                                 state.current = 0;
-		                                 }
+                                         // Advance to the next frame
+                                         state.current += 1;
+                                         if state.current >= state.length {
+                                             state.current = 0;
+                                         }
 
-		                                 // Draw FPS on-top of the player's render
-		                                 system.draw_fps(0, 0);
+                                         // Draw FPS on-top of the player's render
+                                         system.draw_fps(0, 0);
 
-		                                 UpdateCtrl::Continue
-	                                 },
-	                                 State { length: player.info().frame_count,
-	                                         current: 0,
-	                                         player, },
-	);
+                                         UpdateCtrl::Continue
+                                     },
+                                     State { length: player.info().frame_count,
+                                             current: 0,
+                                             player });
 
-	EventLoopCtrl::Continue
+    EventLoopCtrl::Continue
 }
 
 

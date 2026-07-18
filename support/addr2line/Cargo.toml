@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-symbolize"
 version = "0.2.2"
@@ -60,4 +62,7 @@ workspace = true
 
 [features]
 default = ["clap", "env_logger", "const-str", "sqlite-bundled"]
+clap = ["dep:clap"]
+env_logger = ["dep:env_logger"]
+const-str = ["dep:const-str"]
 sqlite-bundled = ["rusqlite/bundled"]

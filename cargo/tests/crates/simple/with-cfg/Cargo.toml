@@ -11,9 +11,9 @@ publish = false
 name = "game"
 path = "../lib.rs"
 crate-type = [
-	"rlib",      # for example
-	"dylib",     # for simulator
-	"staticlib", # for hardware
+    "rlib",      # for example
+    "dylib",     # for simulator
+    "staticlib", # for hardware
 ]
 
 

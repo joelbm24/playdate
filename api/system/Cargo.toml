@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-system"
 version = "0.3.16"
@@ -22,6 +24,8 @@ bindgen-runtime = ["sys/bindgen-runtime"]
 bindgen-static = ["sys/bindgen-static"]
 bindings-derive-debug = ["sys/bindings-derive-debug"]
 
+[dependencies]
+spin = { workspace = true }
 
 [dependencies.sys]
 workspace = true
@@ -64,14 +68,14 @@ bundle-id = "rs.playdate.system"
 [package.metadata.docs.rs]
 all-features = false
 features = [
-	"sys/bindings-derive-default",
-	"sys/bindings-derive-eq",
-	"sys/bindings-derive-copy",
-	"bindings-derive-debug",
-	"sys/bindings-derive-hash",
-	"sys/bindings-derive-ord",
-	"sys/bindings-derive-partialeq",
-	"sys/bindings-derive-partialord",
+    "sys/bindings-derive-default",
+    "sys/bindings-derive-eq",
+    "sys/bindings-derive-copy",
+    "bindings-derive-debug",
+    "sys/bindings-derive-hash",
+    "sys/bindings-derive-ord",
+    "sys/bindings-derive-partialeq",
+    "sys/bindings-derive-partialord",
 ]
 rustdoc-args = ["--cfg", "docsrs", "--show-type-layout"]
 default-target = "thumbv7em-none-eabihf"

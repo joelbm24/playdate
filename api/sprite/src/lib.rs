@@ -16,20 +16,20 @@ mod sprite;
 pub mod api;
 
 pub mod callback {
-	pub mod draw;
-	pub mod update;
-	pub mod collision;
+    pub mod draw;
+    pub mod update;
+    pub mod collision;
 }
 
 pub mod prelude {
-	pub use super::sprite::*;
-	pub use super::api::Api as _;
-	pub use super::api::Default as DefaultSpriteApi;
-	pub use super::callback::draw::SpriteDraw;
-	pub use super::callback::update::SpriteUpdate;
-	pub use super::callback::collision::SpriteCollisionResponse;
+    pub use super::sprite::*;
+    pub use super::api::Api as _;
+    pub use super::api::Default as DefaultSpriteApi;
+    pub use super::callback::draw::SpriteDraw;
+    pub use super::callback::update::SpriteUpdate;
+    pub use super::callback::collision::SpriteCollisionResponse;
 
-	pub use super::{TypedSprite, SpriteApi};
+    pub use super::{TypedSprite, SpriteApi};
 }
 
 pub use sprite::*;
@@ -43,8 +43,8 @@ use crate::api::Api;
 /// Equivalent to [`sys::ffi::playdate_sprite::setAlwaysRedraw`]
 #[doc(alias = "sys::ffi::playdate_sprite::setAlwaysRedraw")]
 pub fn set_always_redraw(value: bool) {
-	let f = api::Api::set_always_redraw(&api::Default);
-	unsafe { f(value.into()) }
+    let f = api::Api::set_always_redraw(&api::Default);
+    unsafe { f(value.into()) }
 }
 
 /// Marks the given dirty_rect (in screen coordinates) as needing a redraw.
@@ -56,8 +56,8 @@ pub fn set_always_redraw(value: bool) {
 /// Equivalent to [`sys::ffi::playdate_sprite::addDirtyRect`]
 #[doc(alias = "sys::ffi::playdate_sprite::addDirtyRect")]
 pub fn add_dirty_rect(rect: LCDRect) {
-	let f = api::Api::add_dirty_rect(&api::Default);
-	unsafe { f(rect) }
+    let f = api::Api::add_dirty_rect(&api::Default);
+    unsafe { f(rect) }
 }
 
 /// Draws every sprite in the display list.
@@ -65,8 +65,8 @@ pub fn add_dirty_rect(rect: LCDRect) {
 /// Equivalent to [`sys::ffi::playdate_sprite::drawSprites`]
 #[doc(alias = "sys::ffi::playdate_sprite::drawSprites")]
 pub fn draw_sprites() {
-	let f = api::Api::draw_sprites(&api::Default);
-	unsafe { f() }
+    let f = api::Api::draw_sprites(&api::Default);
+    unsafe { f() }
 }
 
 /// Updates and draws every sprite in the display list.
@@ -74,8 +74,8 @@ pub fn draw_sprites() {
 /// Equivalent to [`sys::ffi::playdate_sprite::updateAndDrawSprites`]
 #[doc(alias = "sys::ffi::playdate_sprite::updateAndDrawSprites")]
 pub fn update_and_draw_sprites() {
-	let f = api::Api::update_and_draw_sprites(&api::Default);
-	unsafe { f() }
+    let f = api::Api::update_and_draw_sprites(&api::Default);
+    unsafe { f() }
 }
 
 
@@ -87,8 +87,8 @@ pub fn update_and_draw_sprites() {
 /// Equivalent to [`sys::ffi::playdate_sprite::addSprite`]
 #[doc(alias = "sys::ffi::playdate_sprite::addSprite")]
 pub fn add_sprite(sprite: &impl AnySprite) {
-	let f = sprite.api_ref().add_sprite();
-	unsafe { f(sprite.as_raw()) }
+    let f = sprite.api_ref().add_sprite();
+    unsafe { f(sprite.as_raw()) }
 }
 
 /// Removes the given sprite from the display list.
@@ -98,8 +98,8 @@ pub fn add_sprite(sprite: &impl AnySprite) {
 /// Equivalent to [`sys::ffi::playdate_sprite::removeSprite`]
 #[doc(alias = "sys::ffi::playdate_sprite::removeSprite")]
 pub fn remove_sprite(sprite: &impl AnySprite) {
-	let f = sprite.api_ref().remove_sprite();
-	unsafe { f(sprite.as_raw()) }
+    let f = sprite.api_ref().remove_sprite();
+    unsafe { f(sprite.as_raw()) }
 }
 
 /// Removes all of the given sprites from the display list.
@@ -107,13 +107,13 @@ pub fn remove_sprite(sprite: &impl AnySprite) {
 /// Equivalent to [`sys::ffi::playdate_sprite::removeSprites`]
 #[doc(alias = "sys::ffi::playdate_sprite::removeSprites")]
 pub fn remove_sprites(sprites: &[impl AnySprite]) {
-	let mut ptrs = alloc::vec::Vec::with_capacity(sprites.len());
-	ptrs.extend(sprites.into_iter().map(|sp| unsafe { sp.as_raw() }));
-	let f = sprites.first()
-	               .map(|sp| sp.api_ref().remove_sprites())
-	               .unwrap_or(api::Default.remove_sprites());
-	unsafe { f(ptrs.as_mut_ptr(), sprites.len() as _) }
-	drop(ptrs);
+    let mut ptrs = alloc::vec::Vec::with_capacity(sprites.len());
+    ptrs.extend(sprites.into_iter().map(|sp| unsafe { sp.as_raw() }));
+    let f = sprites.first()
+                   .map(|sp| sp.api_ref().remove_sprites())
+                   .unwrap_or(api::Default.remove_sprites());
+    unsafe { f(ptrs.as_mut_ptr(), sprites.len() as _) }
+    drop(ptrs);
 }
 
 
@@ -122,8 +122,8 @@ pub fn remove_sprites(sprites: &[impl AnySprite]) {
 /// Equivalent to [`sys::ffi::playdate_sprite::removeAllSprites`]
 #[doc(alias = "sys::ffi::playdate_sprite::removeAllSprites")]
 pub fn remove_all_sprites() {
-	let f = api::Api::remove_all_sprites(&api::Default);
-	unsafe { f() }
+    let f = api::Api::remove_all_sprites(&api::Default);
+    unsafe { f() }
 }
 
 
@@ -132,8 +132,8 @@ pub fn remove_all_sprites() {
 /// Equivalent to [`sys::ffi::playdate_sprite::getSpriteCount`]
 #[doc(alias = "sys::ffi::playdate_sprite::getSpriteCount")]
 pub fn sprite_count() -> c_int {
-	let f = api::Api::get_sprite_count(&api::Default);
-	unsafe { f() }
+    let f = api::Api::get_sprite_count(&api::Default);
+    unsafe { f() }
 }
 
 
@@ -142,8 +142,8 @@ pub fn sprite_count() -> c_int {
 /// Equivalent to [`sys::ffi::playdate_sprite::setClipRectsInRange`]
 #[doc(alias = "sys::ffi::playdate_sprite::setClipRectsInRange")]
 pub fn set_clip_rects_in_range(clip: LCDRect, start_z: c_int, end_z: c_int) {
-	let f = api::Api::set_clip_rects_in_range(&api::Default);
-	unsafe { f(clip, start_z, end_z) }
+    let f = api::Api::set_clip_rects_in_range(&api::Default);
+    unsafe { f(clip, start_z, end_z) }
 }
 
 /// Clears the clipping rectangle for all sprites with a Z index within `start_z` and `end_z` __inclusive__.
@@ -151,8 +151,8 @@ pub fn set_clip_rects_in_range(clip: LCDRect, start_z: c_int, end_z: c_int) {
 /// Equivalent to [`sys::ffi::playdate_sprite::clearClipRectsInRange`]
 #[doc(alias = "sys::ffi::playdate_sprite::clearClipRectsInRange")]
 pub fn clear_clip_rects_in_range(start_z: c_int, end_z: c_int) {
-	let f = api::Api::clear_clip_rects_in_range(&api::Default);
-	unsafe { f(start_z, end_z) }
+    let f = api::Api::clear_clip_rects_in_range(&api::Default);
+    unsafe { f(start_z, end_z) }
 }
 
 
@@ -161,8 +161,8 @@ pub fn clear_clip_rects_in_range(start_z: c_int, end_z: c_int) {
 /// Equivalent to [`sys::ffi::playdate_sprite::resetCollisionWorld`]
 #[doc(alias = "sys::ffi::playdate_sprite::resetCollisionWorld")]
 pub fn reset_collision_world() {
-	let f = api::Api::reset_collision_world(&api::Default);
-	unsafe { f() }
+    let f = api::Api::reset_collision_world(&api::Default);
+    unsafe { f() }
 }
 
 
@@ -171,12 +171,12 @@ pub fn reset_collision_world() {
 /// Equivalent to [`sys::ffi::playdate_sprite::querySpritesAtPoint`]
 #[doc(alias = "sys::ffi::playdate_sprite::querySpritesAtPoint")]
 pub fn query_sprites_at_point(x: c_float, y: c_float) -> &'static [SpriteRef] {
-	let mut len: c_int = 0;
-	let api = api::Default;
-	let f = api.query_sprites_at_point();
-	let ptr = unsafe { f(x, y, &mut len) };
-	let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
-	unsafe { core::mem::transmute(slice) }
+    let mut len: c_int = 0;
+    let api = api::Default;
+    let f = api.query_sprites_at_point();
+    let ptr = unsafe { f(x, y, &mut len) };
+    let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
+    unsafe { core::mem::transmute(slice) }
 }
 
 /// Returns an slice of all sprites with collision rects
@@ -185,11 +185,11 @@ pub fn query_sprites_at_point(x: c_float, y: c_float) -> &'static [SpriteRef] {
 /// Equivalent to [`sys::ffi::playdate_sprite::querySpritesInRect`]
 #[doc(alias = "sys::ffi::playdate_sprite::querySpritesInRect")]
 pub fn query_sprites_in_rect(x: c_float, y: c_float, width: c_float, height: c_float) -> &'static [SpriteRef] {
-	let mut len: c_int = 0;
-	let f = api::Api::query_sprites_in_rect(&api::Default);
-	let ptr = unsafe { f(x, y, width, height, &mut len) };
-	let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
-	unsafe { core::mem::transmute(slice) }
+    let mut len: c_int = 0;
+    let f = api::Api::query_sprites_in_rect(&api::Default);
+    let ptr = unsafe { f(x, y, width, height, &mut len) };
+    let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
+    unsafe { core::mem::transmute(slice) }
 }
 
 /// Returns an slice of all sprites with collision rects
@@ -198,11 +198,11 @@ pub fn query_sprites_in_rect(x: c_float, y: c_float, width: c_float, height: c_f
 /// Equivalent to [`sys::ffi::playdate_sprite::querySpritesAlongLine`]
 #[doc(alias = "sys::ffi::playdate_sprite::querySpritesAlongLine")]
 pub fn query_sprites_along_line(x1: c_float, y1: c_float, x2: c_float, y2: c_float) -> &'static [SpriteRef] {
-	let mut len: c_int = 0;
-	let f = api::Api::query_sprites_along_line(&api::Default);
-	let ptr = unsafe { f(x1, y1, x2, y2, &mut len) };
-	let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
-	unsafe { core::mem::transmute(slice) }
+    let mut len: c_int = 0;
+    let f = api::Api::query_sprites_along_line(&api::Default);
+    let ptr = unsafe { f(x1, y1, x2, y2, &mut len) };
+    let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
+    unsafe { core::mem::transmute(slice) }
 }
 
 /// Returns an slice of [`SpriteQueryInfo`]s for all sprites with collision rects
@@ -217,10 +217,10 @@ pub fn query_sprite_info_along_line(x1: c_float,
                                     x2: c_float,
                                     y2: c_float)
                                     -> &'static [SpriteQueryInfo] {
-	let mut len: c_int = 0;
-	let f = api::Api::query_sprite_info_along_line(&api::Default);
-	let ptr = unsafe { f(x1, y1, x2, y2, &mut len) };
-	unsafe { core::slice::from_raw_parts(ptr, len as _) }
+    let mut len: c_int = 0;
+    let f = api::Api::query_sprite_info_along_line(&api::Default);
+    let ptr = unsafe { f(x1, y1, x2, y2, &mut len) };
+    unsafe { core::slice::from_raw_parts(ptr, len as _) }
 }
 
 
@@ -231,11 +231,11 @@ pub fn query_sprite_info_along_line(x1: c_float,
 /// Equivalent to [`sys::ffi::playdate_sprite::allOverlappingSprites`]
 #[doc(alias = "sys::ffi::playdate_sprite::allOverlappingSprites")]
 pub fn all_overlapping_sprites() -> &'static [SpriteRef] {
-	let f = api::Api::all_overlapping_sprites(&api::Default);
-	let mut len: c_int = 0;
-	let ptr = unsafe { f(&mut len) };
-	let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
-	unsafe { core::mem::transmute(slice) }
+    let f = api::Api::all_overlapping_sprites(&api::Default);
+    let mut len: c_int = 0;
+    let ptr = unsafe { f(&mut len) };
+    let slice = unsafe { core::slice::from_raw_parts(ptr, len as _) };
+    unsafe { core::mem::transmute(slice) }
 }
 
 
@@ -244,94 +244,94 @@ impl<T: AnySprite> AnySprite for &'_ T {}
 
 
 pub trait SpriteApi {
-	/// Type of inner API access-point.
-	type Api: api::Api;
+    /// Type of inner API access-point.
+    type Api: api::Api;
 
-	/// Get a copy of inner api access point.
-	fn api(&self) -> Self::Api
-		where Self::Api: Copy;
+    /// Get a copy of inner api access point.
+    fn api(&self) -> Self::Api
+        where Self::Api: Copy;
 
-	/// Get a ref to inner api access point.
-	fn api_ref(&self) -> &Self::Api;
+    /// Get a ref to inner api access point.
+    fn api_ref(&self) -> &Self::Api;
 }
 
 impl<T: SpriteApi> SpriteApi for &'_ T {
-	type Api = T::Api;
+    type Api = T::Api;
 
-	fn api(&self) -> Self::Api
-		where Self::Api: Copy {
-		(*self).api()
-	}
+    fn api(&self) -> Self::Api
+        where Self::Api: Copy {
+        (*self).api()
+    }
 
-	fn api_ref(&self) -> &Self::Api { (*self).api_ref() }
+    fn api_ref(&self) -> &Self::Api { (*self).api_ref() }
 }
 
 
 /// Represents strictly typed sprite, includes associated user-data and free-on-drop flag.
 pub trait TypedSprite: AsRaw<Type = LCDSprite> + SpriteApi {
-	/// Associated user-data with sprite.
-	type Userdata;
-	/// Should be freed when sprite is dropped.
-	const FREE_ON_DROP: bool = true;
+    /// Associated user-data with sprite.
+    type Userdata;
+    /// Should be freed when sprite is dropped.
+    const FREE_ON_DROP: bool = true;
 }
 
 
 /// Type of sprite, includes associated user-data and free-on-drop flag.
 pub trait SpriteType {
-	/// Type of API access-point.
-	type Api: api::Api;
+    /// Type of API access-point.
+    type Api: api::Api;
 
-	/// Associated user-data with sprite.
-	type Userdata;
+    /// Associated user-data with sprite.
+    type Userdata;
 
-	/// Should be freed when sprite is dropped.
-	const FREE_ON_DROP: bool = false;
+    /// Should be freed when sprite is dropped.
+    const FREE_ON_DROP: bool = false;
 }
 
 impl<T: TypedSprite> SpriteType for T {
-	type Api = <T as SpriteApi>::Api;
-	type Userdata = <T as TypedSprite>::Userdata;
-	const FREE_ON_DROP: bool = <T as TypedSprite>::FREE_ON_DROP;
+    type Api = <T as SpriteApi>::Api;
+    type Userdata = <T as TypedSprite>::Userdata;
+    const FREE_ON_DROP: bool = <T as TypedSprite>::FREE_ON_DROP;
 }
 
 
 pub mod utils {
-	use core::ops::Deref;
+    use core::ops::Deref;
 
-	/// C array syzed at runtime.
-	#[must_use]
-	#[repr(transparent)]
-	pub struct Arr<'t, T>(pub(super) &'t [T]);
+    /// C array syzed at runtime.
+    #[must_use]
+    #[repr(transparent)]
+    pub struct Arr<'t, T>(pub(super) &'t [T]);
 
-	impl<T> Drop for Arr<'_, T> {
-		fn drop(&mut self) {
-			let p = self.0.as_ptr() as _;
+    impl<T> Drop for Arr<'_, T> {
+        fn drop(&mut self) {
+            let p = self.0.as_ptr() as _;
 
-			#[inline]
-			const fn inner<T>(len: usize) -> core::alloc::Layout {
-				if let Ok(l) = core::alloc::Layout::array::<T>(len) {
-					l
-				} else {
-					use core::mem::{size_of, align_of};
-					let (size, align) = (size_of::<T>(), align_of::<T>());
-					unsafe { core::alloc::Layout::from_size_align_unchecked(size.unchecked_mul(len), align) }
-				}
-			}
+            #[inline]
+            const fn inner<T>(len: usize) -> core::alloc::Layout {
+                if let Ok(l) = core::alloc::Layout::array::<T>(len) {
+                    l
+                } else {
+                    use core::mem::{size_of, align_of};
+                    let (size, align) = (size_of::<T>(), align_of::<T>());
+                    unsafe { core::alloc::Layout::from_size_align_unchecked(size.unchecked_mul(len), align) }
+                }
+            }
 
-			let l = inner::<T>(self.0.len());
-			unsafe {
-				// We could simply `sys::allocator::dealloc(p)`, but we have to use SYSTEM GLOBAL allocator,
-				// which can be a user's custom allocator, not that one in `playdate-sys`.
-				alloc::alloc::dealloc(p, l);
-			};
-		}
-	}
+            let l = inner::<T>(self.0.len());
+            unsafe {
+                // We could simply `sys::allocator::dealloc(p)`, but we have to use SYSTEM GLOBAL allocator,
+                // which can be a user's custom allocator, not that one in `playdate-sys`.
+                alloc::alloc::dealloc(p, l);
+            };
+        }
+    }
 
-	impl<T> Deref for Arr<'_, T> {
-		type Target = [T];
-		fn deref(&self) -> &Self::Target { self.0 }
-	}
-	impl<T> AsRef<[T]> for Arr<'_, T> {
-		fn as_ref(&self) -> &[T] { self.0 }
-	}
+    impl<T> Deref for Arr<'_, T> {
+        type Target = [T];
+        fn deref(&self) -> &Self::Target { self.0 }
+    }
+    impl<T> AsRef<[T]> for Arr<'_, T> {
+        fn as_ref(&self) -> &[T] { self.0 }
+    }
 }

@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-build-utils"
 version = "0.3.11"
@@ -22,7 +24,7 @@ version = "0.5"
 [features]
 default = ["log", "cargo-message"]
 cargo-message = []                 # cargo notifications & warnings and logging
-
+log = ["dep:log"]
 
 [package.metadata.docs.rs]
 all-features = true

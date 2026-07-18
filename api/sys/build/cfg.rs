@@ -2,19 +2,19 @@ use bindgen_cfg::Cfg;
 
 
 pub fn create() -> Cfg {
-	let mut cfg = Cfg::default();
-	cfg.derive.default = feature_derive_default();
-	cfg.derive.eq = feature_derive_eq();
-	cfg.derive.copy = feature_derive_copy();
-	cfg.derive.debug = feature_derive_debug();
-	cfg.derive.hash = feature_derive_hash();
-	cfg.derive.ord = feature_derive_ord();
-	cfg.derive.partialeq = feature_derive_partialeq();
-	cfg.derive.partialord = feature_derive_partialord();
-	cfg.derive.constparamty = feature_derive_constparamty();
-	cfg.features.documentation = feature_bindings_documentation();
-	cfg.features.rustify = feature_bindings_rustify();
-	cfg
+    let mut cfg = Cfg::default();
+    cfg.derive.default = feature_derive_default();
+    cfg.derive.eq = feature_derive_eq();
+    cfg.derive.copy = feature_derive_copy();
+    cfg.derive.debug = feature_derive_debug();
+    cfg.derive.hash = feature_derive_hash();
+    cfg.derive.ord = feature_derive_ord();
+    cfg.derive.partialeq = feature_derive_partialeq();
+    cfg.derive.partialord = feature_derive_partialord();
+    cfg.derive.constparamty = feature_derive_constparamty();
+    cfg.features.documentation = feature_bindings_documentation();
+    cfg.features.rustify = feature_bindings_rustify();
+    cfg
 }
 
 

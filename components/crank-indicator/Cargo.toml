@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-ui-crank-indicator"
 version = "0.1.7"
@@ -16,26 +18,26 @@ default = ["sys/default", "gfx/default", "display/default", "sprite/default", "s
 # playdate-sys features, should be shared because it's build configuration:
 
 bindgen-runtime = [
-	"sys/bindgen-runtime",
-	"gfx/bindgen-runtime",
-	"display/bindgen-runtime",
-	"sprite/bindgen-runtime",
-	"system/bindgen-runtime",
+    "sys/bindgen-runtime",
+    "gfx/bindgen-runtime",
+    "display/bindgen-runtime",
+    "sprite/bindgen-runtime",
+    "system/bindgen-runtime",
 ]
 bindgen-static = [
-	"sys/bindgen-static",
-	"gfx/bindgen-static",
-	"display/bindgen-static",
-	"sprite/bindgen-static",
-	"system/bindgen-static",
+    "sys/bindgen-static",
+    "gfx/bindgen-static",
+    "display/bindgen-static",
+    "sprite/bindgen-static",
+    "system/bindgen-static",
 ]
 
 bindings-derive-debug = [
-	"sys/bindings-derive-debug",
-	"gfx/bindings-derive-debug",
-	"display/bindings-derive-debug",
-	"sprite/bindings-derive-debug",
-	"system/bindings-derive-debug",
+    "sys/bindings-derive-debug",
+    "gfx/bindings-derive-debug",
+    "display/bindings-derive-debug",
+    "sprite/bindings-derive-debug",
+    "system/bindings-derive-debug",
 ]
 
 
@@ -69,14 +71,14 @@ bundle-id = "rs.playdate.ui.crank.indicator"
 [package.metadata.docs.rs]
 all-features = false
 features = [
-	"sys/bindings-derive-default",
-	"sys/bindings-derive-eq",
-	"sys/bindings-derive-copy",
-	"bindings-derive-debug",
-	"sys/bindings-derive-hash",
-	"sys/bindings-derive-ord",
-	"sys/bindings-derive-partialeq",
-	"sys/bindings-derive-partialord",
+    "sys/bindings-derive-default",
+    "sys/bindings-derive-eq",
+    "sys/bindings-derive-copy",
+    "bindings-derive-debug",
+    "sys/bindings-derive-hash",
+    "sys/bindings-derive-ord",
+    "sys/bindings-derive-partialeq",
+    "sys/bindings-derive-partialord",
 ]
 rustdoc-args = ["--cfg", "docsrs", "--show-type-layout"]
 default-target = "thumbv7em-none-eabihf"

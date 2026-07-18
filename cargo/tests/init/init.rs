@@ -12,70 +12,70 @@ fn run(crate_name: &str,
        lib: Option<bool>,
        args: impl IntoIterator<Item = impl Into<OsString>>)
        -> Result<(Output, PathBuf)> {
-	println!("crate: {}", crate_name);
+    println!("crate: {}", crate_name);
 
-	let crate_path = target_dir().join(format!("create-init--{crate_name}"));
+    let crate_path = target_dir().join(format!("create-init--{crate_name}"));
 
-	if crate_path.try_exists()? {
-		std::fs::remove_dir_all(&crate_path)?;
-		std::fs::create_dir_all(&crate_path)?;
-	} else {
-		std::fs::create_dir_all(&crate_path)?;
-	}
+    if crate_path.try_exists()? {
+        std::fs::remove_dir_all(&crate_path)?;
+        std::fs::create_dir_all(&crate_path)?;
+    } else {
+        std::fs::create_dir_all(&crate_path)?;
+    }
 
-	let mut extra = vec![];
-	if let Some(cty_arg) = lib.and_then(|v| v.then_some("--lib").or(Some("--bin"))) {
-		extra.push(OsString::from(cty_arg));
-	}
+    let mut extra = vec![];
+    if let Some(cty_arg) = lib.and_then(|v| v.then_some("--lib").or(Some("--bin"))) {
+        extra.push(OsString::from(cty_arg));
+    }
 
-	let args = extra.into_iter().chain(args.into_iter().map(Into::into));
-	let output = Tool::init(&crate_path, args)?;
-	assert!(output.status.success());
-	Ok((output, crate_path))
+    let args = extra.into_iter().chain(args.into_iter().map(Into::into));
+    let output = Tool::init(&crate_path, args)?;
+    assert!(output.status.success());
+    Ok((output, crate_path))
 
-	// TODO: Run `package` after `init`/`run` cmd
+    // TODO: Run `package` after `init`/`run` cmd
 }
 
 
 #[test]
 #[cfg_attr(not(init_tests), ignore = "set RUSTFLAGS='--cfg init_tests' to enable.")]
 fn create_lib() -> Result<()> {
-	let args = ["--full-config", "--full-metadata"].into_iter().map(OsStr::new);
+    let args = ["--full-config", "--full-metadata"].into_iter().map(OsStr::new);
 
-	let (_, crate_dir) = run("init-lib", Some(true), args)?;
+    let (_, crate_dir) = run("init-lib", Some(true), args)?;
 
-	assert!(crate_dir.join("Cargo.toml").exists());
-	assert!(crate_dir.join("src").join("lib.rs").exists());
-	assert!(!crate_dir.join("src").join("main.rs").exists());
+    assert!(crate_dir.join("Cargo.toml").exists());
+    assert!(crate_dir.join("src").join("lib.rs").exists());
+    assert!(!crate_dir.join("src").join("main.rs").exists());
 
-	Ok(())
+    Ok(())
 }
 
 
 #[test]
 #[cfg_attr(not(init_tests), ignore = "set RUSTFLAGS='--cfg init_tests' to enable.")]
 fn create_bin() -> Result<()> {
-	let args = ["--full-config", "--full-metadata"].into_iter().map(OsStr::new);
+    let args = ["--full-config", "--full-metadata"].into_iter().map(OsStr::new);
 
-	let (_, crate_dir) = run("init-bin", Some(false), args)?;
+    let (_, crate_dir) = run("init-bin", Some(false), args)?;
 
-	assert!(crate_dir.join("Cargo.toml").exists());
-	assert!(crate_dir.join("src").join("lib.rs").exists());
-	assert!(crate_dir.join("src").join("main.rs").exists());
+    assert!(crate_dir.join("Cargo.toml").exists());
+    assert!(crate_dir.join("src").join("lib.rs").exists());
+    assert!(crate_dir.join("src").join("main.rs").exists());
 
-	Ok(())
+    Ok(())
 }
 
 #[test]
 #[cfg_attr(not(init_tests), ignore = "set RUSTFLAGS='--cfg init_tests' to enable.")]
 fn create_default() -> Result<()> {
-	let args = ["--full-config", "--full-metadata"].into_iter().map(OsStr::new);
+    let args = ["--full-config", "--full-metadata"].into_iter().map(OsStr::new);
 
-	let (_, crate_dir) = run("init-default", None, args)?;
+    let (_, crate_dir) = run("init-default", None, args)?;
 
-	assert!(crate_dir.join("Cargo.toml").exists());
-	assert!(crate_dir.join("src").join("lib.rs").exists());
-	assert!(!crate_dir.join("src").join("main.rs").exists());
+    assert!(crate_dir.join("Cargo.toml").exists());
+    assert!(crate_dir.join("src").join("lib.rs").exists());
+    assert!(!crate_dir.join("src").join("main.rs").exists());
 
-	Ok(())
+    Ok(())
 }

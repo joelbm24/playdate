@@ -2,13 +2,13 @@
 
 [graph]
 targets = [
-	"thumbv7em-none-eabihf",
-	"aarch64-apple-darwin",
-	"x86_64-apple-darwin",
-	"aarch64-unknown-linux-gnu",
-	"x86_64-unknown-linux-gnu",
-	"x86_64-unknown-linux-musl",
-	"x86_64-pc-windows-msvc",
+    "thumbv7em-none-eabihf",
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "aarch64-unknown-linux-gnu",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-unknown-linux-musl",
+    "x86_64-pc-windows-msvc",
 ]
 all-features = false
 no-default-features = false
@@ -19,21 +19,21 @@ features = []
 # db-path = "~/.cargo/advisory-dbs"
 # db-urls = ["https://github.com/rustsec/advisory-db"]
 ignore = [
-	{ id = "RUSTSEC-2024-0436", reason = "Unmaintained - it's ok, also there is no available alternative." },
+    { id = "RUSTSEC-2024-0436", reason = "Unmaintained - it's ok, also there is no available alternative." },
 ]
 
 
 [licenses]
 confidence-threshold = 0.8
 allow = [
-	"Unlicense",
-	"Apache-2.0",
-	"Apache-2.0 WITH LLVM-exception",
-	"MIT",
-	"MPL-2.0",
-	"BSD-3-Clause",
-	"ISC",
-	"Unicode-3.0",
+    "Unlicense",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "MIT",
+    "MPL-2.0",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
 ]
 
 [[licenses.exceptions]]

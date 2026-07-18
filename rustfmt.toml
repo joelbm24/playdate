@@ -12,8 +12,8 @@ use_small_heuristics = "Default"
 # Indentation:
 newline_style = "Unix"
 indent_style = "Visual" # Block
-hard_tabs = true
-tab_spaces = 3
+hard_tabs = false
+tab_spaces = 4
 
 # Strings and comments:
 format_strings = false

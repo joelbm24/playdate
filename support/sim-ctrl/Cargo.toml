@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-simulator-utils"
 version = "0.1.8"
@@ -35,6 +37,7 @@ optional = true
 
 [features]
 tokio = ["dep:tokio", "async-std?/tokio1"]
+async-std = ["dep:async-std"]
 
 
 [package.metadata.docs.rs]

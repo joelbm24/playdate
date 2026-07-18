@@ -14,36 +14,36 @@ use system::update::UpdateCtrl;
 
 
 /// Entry point, event handler
-#[no_mangle]
+#[unsafe(no_mangle)]
 fn event_handler(_api: NonNull<PlaydateAPI>, _event: PDSystemEvent, _: u32) -> EventLoopCtrl {
-	println!("Init");
+    println!("Init");
 
-	// Do something good with `_api` here...
-
-
-	// Registering update-callback with user-data.
-	// The user-data is just a number because not needed nothing complex for this example.
-	System::Default().set_update_callback_static(Some(on_update), 42);
+    // Do something good with `_api` here...
 
 
-	// Continue event-loop:
-	EventLoopCtrl::Continue
+    // Registering update-callback with user-data.
+    // The user-data is just a number because not needed nothing complex for this example.
+    System::Default().set_update_callback_static(Some(on_update), 42);
+
+
+    // Continue event-loop:
+    EventLoopCtrl::Continue
 }
 
 
 /// Update handler
 fn on_update(v: &mut i32) -> UpdateCtrl {
-	*v += 1;
-	println!("{v} / 100");
+    *v += 1;
+    println!("{v} / 100");
 
-	if *v == 100 {
-		println!("Stopping updates...");
-		System::Default().set_update_callback_static(None, ());
-		println!("See you.");
-	}
+    if *v == 100 {
+        println!("Stopping updates...");
+        System::Default().set_update_callback_static(None, ());
+        println!("See you.");
+    }
 
-	// Continue updates:
-	UpdateCtrl::Continue
+    // Continue updates:
+    UpdateCtrl::Continue
 }
 
 

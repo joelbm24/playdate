@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-tool"
 version = "0.3.9"
@@ -55,11 +57,11 @@ workspace = true
 [features]
 eject = ["device/eject"] # windows only, enable one more unmount method
 
-tracing = ["dep:tracing", "tracing-subscriber", "device/tracing", "simulator/tracing"]
+tracing = ["dep:tracing", "dep:tracing-subscriber", "device/tracing", "simulator/tracing"]
 
 # Useful with `RUSTFLAGS="--cfg tokio_unstable"` &
 # [tokio-console](https://tokio.rs/tokio/topics/tracing-next-steps)
-tokio-tracing = ["tracing", "tokio/tracing", "console-subscriber", "tracing"]
+tokio-tracing = ["tracing", "tokio/tracing", "dep:console-subscriber", "tracing"]
 
 
 [package.metadata.docs.rs]

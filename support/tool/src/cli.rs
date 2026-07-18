@@ -12,231 +12,231 @@ pub fn parse() -> Cfg { Cfg::parse() }
 #[derive(Parser, Debug)]
 #[command(author, version, about, name = "pdtool")]
 pub struct Cfg {
-	#[command(subcommand)]
-	pub cmd: Command,
+    #[command(subcommand)]
+    pub cmd: Command,
 
-	/// Standard output format.
-	#[clap(long, global = true, default_value_t = Format::Human)]
-	pub format: Format,
+    /// Standard output format.
+    #[clap(long, global = true, default_value_t = Format::Human)]
+    pub format: Format,
 }
 
 
 #[derive(ValueEnum, Debug, Clone, Copy)]
 pub enum Format {
-	Human,
-	Json,
+    Human,
+    Json,
 }
 
 impl std::fmt::Display for Format {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		match self {
-			Format::Human => "human".fmt(f),
-			Format::Json => "json".fmt(f),
-		}
-	}
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Format::Human => "human".fmt(f),
+            Format::Json => "json".fmt(f),
+        }
+    }
 }
 
 
 #[derive(Subcommand, Debug)]
 pub enum Command {
-	/// Print list of connected active Playdate devices.
-	List {
-		#[arg(default_value_t = DeviceKind::Any)]
-		kind: DeviceKind,
-	},
+    /// Print list of connected active Playdate devices.
+    List {
+        #[arg(default_value_t = DeviceKind::Any)]
+        kind: DeviceKind,
+    },
 
-	/// Mount a Playdate device if specified, otherwise mount all Playdates as possible.
-	Mount {
-		#[command(flatten)]
-		query: Query,
-		/// Wait for availability of mounted device's filesystem.
-		#[arg(long, default_value_t = false)]
-		wait: bool,
-	},
+    /// Mount a Playdate device if specified, otherwise mount all Playdates as possible.
+    Mount {
+        #[command(flatten)]
+        query: Query,
+        /// Wait for availability of mounted device's filesystem.
+        #[arg(long, default_value_t = false)]
+        wait: bool,
+    },
 
-	/// Unmount a Playdate device if specified, otherwise unmount all mounted Playdates.
-	Unmount {
-		/// Device spec
-		#[command(flatten)]
-		query: Query,
-		/// Wait for device to be connected after unmounted.
-		#[arg(long, default_value_t = false)]
-		wait: bool,
-	},
+    /// Unmount a Playdate device if specified, otherwise unmount all mounted Playdates.
+    Unmount {
+        /// Device spec
+        #[command(flatten)]
+        query: Query,
+        /// Wait for device to be connected after unmounted.
+        #[arg(long, default_value_t = false)]
+        wait: bool,
+    },
 
-	/// Install given package to device if specified, otherwise use all devices as possible.
-	///
-	/// Workflow: switch to storage mode and mount if needed, write files, unmount if requested.
-	Install(#[command(flatten)] Install),
+    /// Install given package to device if specified, otherwise use all devices as possible.
+    ///
+    /// Workflow: switch to storage mode and mount if needed, write files, unmount if requested.
+    Install(#[command(flatten)] Install),
 
-	/// Install and run given package on the specified device or simulator.
-	Run(#[command(flatten)] run::Run),
+    /// Install and run given package on the specified device or simulator.
+    Run(#[command(flatten)] run::Run),
 
-	/// Connect to device and proxy output to stdout.
-	Read(#[command(flatten)] Query),
+    /// Connect to device and proxy output to stdout.
+    Read(#[command(flatten)] Query),
 
-	/// Send command to specified device.
-	// #[command(hide = true)]
-	Send(#[command(flatten)] Send),
+    /// Send command to specified device.
+    // #[command(hide = true)]
+    Send(#[command(flatten)] Send),
 
-	/// Debug functions, only for development purposes.
-	#[cfg(debug_assertions)]
-	Debug(#[command(flatten)] Dbg),
+    /// Debug functions, only for development purposes.
+    #[cfg(debug_assertions)]
+    Debug(#[command(flatten)] Dbg),
 }
 
 
 #[derive(Clone, Debug, clap::Parser)]
 pub struct Dbg {
-	/// Command to send:
-	#[clap(subcommand)]
-	pub cmd: DbgCmd,
+    /// Command to send:
+    #[clap(subcommand)]
+    pub cmd: DbgCmd,
 
-	/// Device selector.
-	#[command(flatten)]
-	pub query: Query,
+    /// Device selector.
+    #[command(flatten)]
+    pub query: Query,
 }
 
 #[derive(Debug, Clone, clap::Subcommand)]
 pub enum DbgCmd {
-	/// Inspect device(s) state.
-	Inspect,
+    /// Inspect device(s) state.
+    Inspect,
 
-	/// New way to eject.
-	///
-	/// Argument `query` - The path of the device.
-	///
-	/// On **Linux** this is the path of the device's file, which almost always
-	/// will be inside `/dev`. For example: `/dev/cdrom`. Do not use paths to a drive's mount point.
-	///
-	/// On **Windows** this is the path you would use with `CreateFile` but
-	/// without the `\\?\` or `\\.\` prefix. Examples of correct paths
-	/// include `D:` (but not `D:\`), `CdRom0` and `Volume{26a21bda-a627-11d7-9931-806e6f6e6963}`.
-	Eject { path: PathBuf },
+    /// New way to eject.
+    ///
+    /// Argument `query` - The path of the device.
+    ///
+    /// On **Linux** this is the path of the device's file, which almost always
+    /// will be inside `/dev`. For example: `/dev/cdrom`. Do not use paths to a drive's mount point.
+    ///
+    /// On **Windows** this is the path you would use with `CreateFile` but
+    /// without the `\\?\` or `\\.\` prefix. Examples of correct paths
+    /// include `D:` (but not `D:\`), `CdRom0` and `Volume{26a21bda-a627-11d7-9931-806e6f6e6963}`.
+    Eject { path: PathBuf },
 }
 
 
 #[derive(ValueEnum, Debug, Clone, Copy)]
 pub enum DeviceKind {
-	Any,
-	Data,
-	Storage,
+    Any,
+    Data,
+    Storage,
 }
 
 impl std::fmt::Display for DeviceKind {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		match self {
-			DeviceKind::Any => "any",
-			DeviceKind::Data => "data",
-			DeviceKind::Storage => "storage",
-		}.fmt(f)
-	}
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DeviceKind::Any => "any",
+            DeviceKind::Data => "data",
+            DeviceKind::Storage => "storage",
+        }.fmt(f)
+    }
 }
 
 
 #[derive(Clone, Debug, clap::Parser)]
 #[command(author, version, about, long_about = None, name = "install")]
 pub struct Install {
-	/// Path to the PDX package.
-	#[arg(value_name = "PACKAGE")]
-	pub pdx: PathBuf,
+    /// Path to the PDX package.
+    #[arg(value_name = "PACKAGE")]
+    pub pdx: PathBuf,
 
-	/// Allow to overwrite existing files.
-	#[arg(long, short, default_value_t = false)]
-	pub force: bool,
+    /// Allow to overwrite existing files.
+    #[arg(long, short, default_value_t = false)]
+    pub force: bool,
 
-	#[command(flatten)]
-	pub query: Query,
+    #[command(flatten)]
+    pub query: Query,
 }
 
 
 #[derive(Clone, Debug, clap::Parser)]
 #[command(author, version, about, long_about = None, name = "send")]
 pub struct Send {
-	/// Command to send:
-	#[clap(subcommand)]
-	pub command: device::device::command::Command,
+    /// Command to send:
+    #[clap(subcommand)]
+    pub command: device::device::command::Command,
 
-	/// Device selector.
-	#[command(flatten)]
-	pub query: Query,
+    /// Device selector.
+    #[command(flatten)]
+    pub query: Query,
 
-	/// Read output from device after sending command.
-	#[arg(long, default_value_t = false)]
-	pub read: bool,
+    /// Read output from device after sending command.
+    #[arg(long, default_value_t = false)]
+    pub read: bool,
 }
 
 
 pub use run::*;
 mod run {
-	use std::borrow::Cow;
+    use std::borrow::Cow;
 
-	use super::*;
-
-
-	#[derive(Clone, Debug, clap::Parser)]
-	#[command(author, version, about, long_about = None, name = "run")]
-	pub struct Run {
-		#[clap(subcommand)]
-		pub destination: Destination,
-	}
+    use super::*;
 
 
-	#[derive(Clone, Debug, clap::Subcommand)]
-	pub enum Destination {
-		/// Install to the device.
-		///
-		/// Attention: <PACKAGE> parameter is a local path to pdx-package.
-		/// But in case of '--no-install' given path will be interpreted as on-device relative to it's root path,
-		/// e.g. "/Games/my-game.pdx".
-		#[clap(visible_alias("dev"))]
-		Device(Dev),
-
-		/// Run with simulator.
-		/// Playdate required to be installed.
-		#[clap(visible_alias("sim"))]
-		Simulator(Sim),
-	}
-
-	impl std::fmt::Display for Destination {
-		fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-			let name: Cow<str> = match self {
-				Destination::Device(Dev { install: Install { query, .. },
-				                          .. }) => format!("device:{query}").into(),
-				Destination::Simulator(_) => "simulator".into(),
-			};
-			name.fmt(f)
-		}
-	}
+    #[derive(Clone, Debug, clap::Parser)]
+    #[command(author, version, about, long_about = None, name = "run")]
+    pub struct Run {
+        #[clap(subcommand)]
+        pub destination: Destination,
+    }
 
 
-	#[derive(Clone, Debug, clap::Parser)]
-	/// Simulator destination
-	pub struct Sim {
-		/// Path to the PDX package.
-		#[arg(value_name = "PACKAGE")]
-		pub pdx: PathBuf,
+    #[derive(Clone, Debug, clap::Subcommand)]
+    pub enum Destination {
+        /// Install to the device.
+        ///
+        /// Attention: <PACKAGE> parameter is a local path to pdx-package.
+        /// But in case of '--no-install' given path will be interpreted as on-device relative to it's root path,
+        /// e.g. "/Games/my-game.pdx".
+        #[clap(visible_alias("dev"))]
+        Device(Dev),
 
-		/// Path to Playdate SDK
-		#[arg(long, env = SDK_ENV_VAR, value_name = "DIRECTORY", value_hint = clap::ValueHint::DirPath)]
-		pub sdk: Option<PathBuf>,
-	}
+        /// Run with simulator.
+        /// Playdate required to be installed.
+        #[clap(visible_alias("sim"))]
+        Simulator(Sim),
+    }
+
+    impl std::fmt::Display for Destination {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            let name: Cow<str> = match self {
+                Destination::Device(Dev { install: Install { query, .. },
+                                          .. }) => format!("device:{query}").into(),
+                Destination::Simulator(_) => "simulator".into(),
+            };
+            name.fmt(f)
+        }
+    }
 
 
-	#[derive(Clone, Debug, clap::Parser)]
-	/// Hardware destination
-	pub struct Dev {
-		#[command(flatten)]
-		pub install: super::Install,
+    #[derive(Clone, Debug, clap::Parser)]
+    /// Simulator destination
+    pub struct Sim {
+        /// Path to the PDX package.
+        #[arg(value_name = "PACKAGE")]
+        pub pdx: PathBuf,
 
-		/// Do not install pdx to the device.
-		/// If set, <PACKAGE> path will be interpreted as on-device path of already installed package,
-		/// relative to the root of device's fs partition.
-		#[arg(long, name = "no-install", default_value_t = false)]
-		pub no_install: bool,
+        /// Path to Playdate SDK
+        #[arg(long, env = SDK_ENV_VAR, value_name = "DIRECTORY", value_hint = clap::ValueHint::DirPath)]
+        pub sdk: Option<PathBuf>,
+    }
 
-		/// Do not wait & read the device's output after execution.
-		/// Exits immediately after send 'run' command.
-		#[arg(long, name = "no-read", default_value_t = false)]
-		pub no_read: bool,
-	}
+
+    #[derive(Clone, Debug, clap::Parser)]
+    /// Hardware destination
+    pub struct Dev {
+        #[command(flatten)]
+        pub install: super::Install,
+
+        /// Do not install pdx to the device.
+        /// If set, <PACKAGE> path will be interpreted as on-device path of already installed package,
+        /// relative to the root of device's fs partition.
+        #[arg(long, name = "no-install", default_value_t = false)]
+        pub no_install: bool,
+
+        /// Do not wait & read the device's output after execution.
+        /// Exits immediately after send 'run' command.
+        #[arg(long, name = "no-read", default_value_t = false)]
+        pub no_read: bool,
+    }
 }

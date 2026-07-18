@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "playdate-scoreboards"
 version = "0.1.7"
@@ -25,6 +27,7 @@ bindings-derive-debug = ["sys/bindings-derive-debug"]
 [dependencies]
 sys = { workspace = true, default-features = false }
 erased_set = "0.8"
+spin = { workspace = true }
 
 
 [dev-dependencies]

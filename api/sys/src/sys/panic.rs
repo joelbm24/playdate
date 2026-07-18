@@ -10,7 +10,7 @@ use super::proc::error;
 
 #[panic_handler]
 fn panic(panic_info: &PanicInfo) -> ! {
-	let mut output = ArrayString::<1024>::new();
-	let _ = write!(output, "{panic_info}\0");
-	error(output.as_str());
+    let mut output = ArrayString::<1024>::new();
+    let _ = write!(output, "{panic_info}\0");
+    error(output.as_str());
 }

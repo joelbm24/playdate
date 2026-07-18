@@ -25,50 +25,48 @@ const TEXT_HEIGHT: u32 = 16;
 
 
 /// Entry point / event handler
-#[no_mangle]
+#[unsafe(no_mangle)]
 fn event_handler(_: NonNull<PlaydateAPI>, event: PDSystemEvent, _: u32) -> EventLoopCtrl {
-	// Ignore any other events, just for this minimalistic example
-	if !matches!(event, SystemEvent::Init) {
-		return EventLoopCtrl::Continue;
-	}
+    // Ignore any other events, just for this minimalistic example
+    if !matches!(event, SystemEvent::Init) {
+        return EventLoopCtrl::Continue;
+    }
 
-	// Create player
-	let player = Player::<api::Cache>::new()?;
+    // Create player
+    let player = Player::<api::Cache>::new()?;
 
-	// Load sound
-	const SOUND_PATH: &Path = "sfx/main_theme.pda";
-	player.load_into_player(SOUND_PATH)?;
+    // Load sound
+    const SOUND_PATH: &Path = "sfx/main_theme.pda";
+    player.load_into_player(SOUND_PATH)?;
 
-	// Start playback
-	player.play(Repeat::LoopsEndlessly);
+    // Start playback
+    player.play(Repeat::LoopsEndlessly);
 
-	// Register update handler
-	// just to draw current playback position
-	let system = system::System::Default();
-	system.set_update_callback_boxed(
-	                                 move |player| {
-		                                 let text = {
-			                                 let offset = player.offset();
-			                                 let length = player.length();
-			                                 format!("{:.2} / {:.2}", offset, length)
-		                                 };
+    // Register update handler
+    // just to draw current playback position
+    let system = system::System::Default();
+    system.set_update_callback_boxed(move |player| {
+                                         let text = {
+                                             let offset = player.offset();
+                                             let length = player.length();
+                                             format!("{:.2} / {:.2}", offset, length)
+                                         };
 
-		                                 gfx::clear(Color::WHITE);
+                                         gfx::clear(Color::WHITE);
 
-		                                 // Get width (screen-size) of text
-		                                 let text_width = gfx::text::get_text_width(&text, None, 0)?;
+                                         // Get width (screen-size) of text
+                                         let text_width = gfx::text::get_text_width(&text, None, 0)?;
 
-		                                 // Render text with current player position
-		                                 let x = INITIAL_X as c_int - text_width / 2;
-		                                 let y = INITIAL_Y as _;
-		                                 gfx::text::draw_text(text, x, y)?;
+                                         // Render text with current player position
+                                         let x = INITIAL_X as c_int - text_width / 2;
+                                         let y = INITIAL_Y as _;
+                                         gfx::text::draw_text(text, x, y)?;
 
-		                                 UpdateCtrl::Continue
-	                                 },
-	                                 player,
-	);
+                                         UpdateCtrl::Continue
+                                     },
+                                     player);
 
-	EventLoopCtrl::Continue
+    EventLoopCtrl::Continue
 }
 
 
