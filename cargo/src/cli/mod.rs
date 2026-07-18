@@ -9,15 +9,14 @@ use std::collections::HashMap;
 use std::env;
 use std::ffi::{OsStr, OsString};
 use std::path::PathBuf;
-use std::rc::Rc;
 use std::str::FromStr;
 
 use clap::error::{ErrorKind, ContextKind, ContextValue};
 use clap::{Arg, ArgMatches, FromArgMatches};
-use cargo::core::{Workspace, VirtualManifest, WorkspaceConfig, WorkspaceRootConfig};
-use cargo::core::compiler::{CompileTarget, CompileKind};
+use cargo::core::Workspace;
+use cargo::core::compiler::{CompileTarget, CompileKind, UserIntent};
 use cargo::ops::CompileOptions;
-use cargo::util::command_prelude::{ArgMatchesExt, CompileMode, ProfileChecking};
+use cargo::util::command_prelude::{ArgMatchesExt, ProfileChecking};
 use cargo::util::GlobalContext as CargoConfig;
 use cargo::util::CargoResult;
 use clap_lex::SeekFrom;
@@ -144,29 +143,20 @@ pub fn initialize_from(args: impl IntoIterator<Item = impl Into<OsString> + AsRe
         let workspace = if !matches!(cmd, Cmd::New | Cmd::Init) {
             matches.workspace(config)?
         } else {
-            // We should not create real ws for place where potentially nothing.
-            // So, lets create virtual one.
-            let cwd = env::current_dir()?;
-            let fake = cwd.join("Cargo.toml");
-            let ws_cfg = WorkspaceConfig::Root(WorkspaceRootConfig::new(&cwd,
-                                                                        &Default::default(),
-                                                                        &Default::default(),
-                                                                        &Default::default(),
-                                                                        &Default::default(),
-                                                                        &Default::default()));
-            let fake_manifest = VirtualManifest::new(
-                                 Rc::default(),
-                                 Rc::new(toml_edit::ImDocument::parse("".to_owned()).expect("empty is valid TOML")),
-                                 Rc::default(),
-                                 Rc::default(),
-                                 Vec::new(),
-                                 Default::default(),
-                                 ws_cfg,
-                                 Default::default(),
-                                 Default::default(),
+            // `Workspace::new_virtual` (and the synthetic `VirtualManifest` it took) was
+            // removed from cargo's internal API during the 0.82 -> 0.98 bump; the closest
+            // replacement, `Workspace::ephemeral`, requires a real `Package` (built from a
+            // real `Manifest`), not a bare synthetic manifest, which is a much bigger
+            // reconstruction than this command actually needs. Since `new`/`init` are just
+            // project-scaffolding helpers (not needed for `build`/`run`/`assets`, which is
+            // all this fork is actually used for downstream), they're left unsupported here
+            // rather than risking a broken reimplementation.
+            anyhow::bail!(
+                "`{CMD_NAME} new`/`{CMD_NAME} init` are not supported in this build of {BIN_NAME} \
+                 (their virtual-workspace scaffolding was removed during the cargo 0.98 API \
+                 migration). Use `cargo new`/`cargo init` directly and add the Playdate \
+                 dependency by hand."
             );
-
-            Workspace::new_virtual(cwd, fake, fake_manifest, config)?
         };
 
         log::debug!("ws target_dir: {:?}", workspace.target_dir().as_path_unlocked());
@@ -198,7 +188,7 @@ pub fn initialize_from(args: impl IntoIterator<Item = impl Into<OsString> + AsRe
         }
 
         let rustc = workspace.gctx().load_global_rustc(Some(&workspace))?;
-        let host_target = CompileTarget::new(&rustc.host)?;
+        let host_target = CompileTarget::new(&rustc.host, false)?;
 
 
         // toolchains:
@@ -367,11 +357,11 @@ fn compile_options(cmd: &Cmd, matches: &ArgMatches, ws: &Workspace<'_>) -> Cargo
     let mut compile_options = match cmd {
         // allow multiple crates:
         Cmd::Build | Cmd::Package | Cmd::Migrate | Cmd::Assets => {
-            matches.compile_options(cfg, CompileMode::Build, Some(ws), ProfileChecking::Custom)?
+            matches.compile_options(cfg, UserIntent::Build, Some(ws), ProfileChecking::Custom)?
         },
 
         Cmd::New | Cmd::Init => {
-            let mut opts = CompileOptions::new(ws.gctx(), CompileMode::Check { test: false })?;
+            let mut opts = CompileOptions::new(ws.gctx(), UserIntent::Check { test: false })?;
             opts.build_config
                 .requested_kinds
                 .push(PlaydateTarget::Device.into());
@@ -381,7 +371,7 @@ fn compile_options(cmd: &Cmd, matches: &ArgMatches, ws: &Workspace<'_>) -> Cargo
         // allow only one crate:
         Cmd::Run => {
             matches.compile_options_for_single_package(cfg,
-                                                       CompileMode::Build,
+                                                       UserIntent::Build,
                                                        Some(ws),
                                                        ProfileChecking::Custom)?
         },
@@ -389,7 +379,7 @@ fn compile_options(cmd: &Cmd, matches: &ArgMatches, ws: &Workspace<'_>) -> Cargo
         // allow only one crate?
         Cmd::Publish => {
             matches.compile_options_for_single_package(cfg,
-                                                       CompileMode::Build,
+                                                       UserIntent::Build,
                                                        Some(ws),
                                                        ProfileChecking::Custom)?
         },

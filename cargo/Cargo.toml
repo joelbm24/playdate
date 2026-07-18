@@ -33,10 +33,11 @@ clap_lex = "0.7"
 dirs.workspace = true
 fs_extra.workspace = true
 
-cargo = "0.82"
-cargo-util = "0.2.17"
-cargo-platform = "0.1.9"
-cargo-util-schemas = "0.5"
+cargo = "0.98"
+cargo-util = "0.2.30"
+cargo-util-terminal = "0.1"
+cargo-platform = "0.3.3"
+cargo-util-schemas = "0.14.1"
 
 semver.workspace = true
 serde = { workspace = true, features = ["derive"] }

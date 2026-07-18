@@ -7,7 +7,7 @@ use cargo::core::compiler::CrateType;
 use cargo::core::compiler::FileType;
 use cargo::core::compiler::TargetInfo;
 use cargo::core::resolver::CliFeatures;
-use cargo::util::command_prelude::CompileMode;
+use cargo::core::compiler::CompileMode;
 
 use crate::config::Config;
 
@@ -99,6 +99,6 @@ impl<'t> Config<'t> {
             CompileKind::Host => &self.rustc.host,
             CompileKind::Target(target) => target.short_name(),
         };
-        info.rustc_outputs(mode, target_kind, triple)
+        info.rustc_outputs(mode, target_kind, triple, self.workspace.gctx())
     }
 }

@@ -29,7 +29,7 @@ impl Rustflags {
 
     pub fn try_default(config: &Config) -> anyhow::Result<Self> {
         let host = config.host_target;
-        let device_target = CompileTarget::new(DEVICE_TARGET).expect("invalid target");
+        let device_target = CompileTarget::new(DEVICE_TARGET, false).expect("invalid target");
 
         let prevent_unwinding = || -> Option<Cow<str>> {
             if config.prevent_unwinding {

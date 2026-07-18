@@ -35,7 +35,7 @@ impl CompileKindExt for CompileKind {
 }
 
 impl CompileKindExt for CompileTarget {
-    fn playdate() -> Self { Self::new(DEVICE_TARGET).unwrap() }
+    fn playdate() -> Self { Self::new(DEVICE_TARGET, false).unwrap() }
     fn is_playdate(&self) -> bool { self.rustc_target() == DEVICE_TARGET }
     fn is_simulator(&self) -> bool { !self.is_playdate() }
 }

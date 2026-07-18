@@ -12,7 +12,7 @@ extern crate build as playdate;
 use std::borrow::Cow;
 
 use anyhow::bail;
-use cargo::core::Verbosity;
+use cargo_util_terminal::Verbosity;
 use cargo::core::compiler::{CrateType, CompileKind};
 use cargo::util::{CargoResult, GlobalContext as CargoConfig};
 use config::Config;
@@ -34,7 +34,7 @@ mod init;
 
 fn main() -> CargoResult<()> {
     let mut config = CargoConfig::default().unwrap_or_else(|err: anyhow::Error| {
-                                               let mut shell = cargo::core::Shell::new();
+                                               let mut shell = cargo_util_terminal::Shell::new();
                                                cargo::exit_with_error(err.into(), &mut shell);
                                            });
     let config = cli::initialize(&mut config)?;
@@ -68,14 +68,6 @@ fn execute(config: &Config) -> CargoResult<()> {
         },
 
         cli::cmd::Cmd::Build => {
-            if config.compile_options.build_config.build_plan {
-                // TODO: wrap result to our own build-plan?
-                // let plan = config.build_plan()?;
-                // TODO: return the plan
-                // config.compile_options.build_config.emit_json()
-                return Err(anyhow::anyhow!("build-plan in not implemented yet"));
-            }
-
             let deps_tree = crate::utils::cargo::meta_deps::meta_deps(config)?;
             build::build(config, &deps_tree)?;
         },

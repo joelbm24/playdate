@@ -51,7 +51,7 @@ workspace = true
 optional = true
 
 [dependencies.rusqlite]
-version = "0.31"
+version = "0.39"
 features = ["bundled"]
 
 [dependencies.utils]

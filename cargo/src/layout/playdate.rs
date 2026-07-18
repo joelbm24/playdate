@@ -199,7 +199,7 @@ impl PlaydateAssets<PathBuf> {
         let mut hasher = StableHasher::new();
         let stable = package_id.stable_hash(config.workspace.root());
         stable.hash(&mut hasher);
-        let hash = hasher.finish();
+        let hash = Hasher::finish(&hasher);
         TargetName::with_package(format!("{}-{hash:016x}", package_id.name()))
     }
 }

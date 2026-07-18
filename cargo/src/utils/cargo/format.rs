@@ -22,14 +22,8 @@ pub enum CompileModeProxy {
     /// `test` is true, then it is also compiled with `--test` to check it like
     /// a test.
     Check { test: bool },
-    /// Used to indicate benchmarks should be built. This is not used in
-    /// `Unit`, because it is essentially the same as `Test` (indicating
-    /// `--test` should be passed to rustc) and by using `Test` instead it
-    /// allows some de-duping of Units to occur.
-    Bench,
     /// A target that will be documented with `rustdoc`.
-    /// If `deps` is true, then it will also document all dependencies.
-    Doc { deps: bool, json: bool },
+    Doc,
     /// A target that will be tested with `rustdoc`.
     Doctest,
     /// An example or library that will be scraped for function calls by `rustdoc`.
@@ -198,7 +192,7 @@ pub fn de_crate_types<'de, D>(deserializer: D) -> Result<Vec<CrateType>, D::Erro
 pub fn de_compile_kind<'de, D>(deserializer: D) -> Result<CompileKind, D::Error>
     where D: Deserializer<'de> {
     let res = if let Some(s) = Option::<&str>::deserialize(deserializer)? {
-        let target = CompileTarget::new(s).map_err(serde::de::Error::custom)?;
+        let target = CompileTarget::new(s, false).map_err(serde::de::Error::custom)?;
         CompileKind::Target(target)
     } else {
         CompileKind::Host

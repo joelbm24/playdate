@@ -1,9 +1,9 @@
 use std::borrow::Cow;
-use std::cell::RefMut;
 use std::fmt::Display;
 use std::ops::DerefMut;
+use std::sync::MutexGuard;
 
-use cargo::core::Shell;
+use cargo_util_terminal::Shell;
 use cargo::util::machine_message::Message;
 use anstyle::AnsiColor as Color;
 
@@ -128,13 +128,13 @@ impl<S: DerefMut<Target = Shell>> CargoLogger<S> {
 
 impl Config<'_> {
     #[must_use]
-    pub fn log(&self) -> CargoLogger<RefMut<'_, Shell>> {
+    pub fn log(&self) -> CargoLogger<MutexGuard<'_, Shell>> {
         CargoLogger(self.workspace.gctx().shell(),
                     self.compile_options.build_config.emit_json())
     }
 
     pub fn log_extra_verbose<F>(&self, mut callback: F)
-        where F: FnMut(CargoLogger<RefMut<'_, Shell>>) {
+        where F: FnMut(CargoLogger<MutexGuard<'_, Shell>>) {
         if self.workspace.gctx().extra_verbose() {
             callback(self.log())
         }

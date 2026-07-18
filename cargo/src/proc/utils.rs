@@ -45,11 +45,10 @@ pub fn cargo(cfg: Option<&Config>) -> CargoResult<std::process::Command> {
     if let Some(cfg) = cfg.map(|cfg| cfg.workspace.gctx()) {
         // transparent env:
         cfg.env_config()?.iter().for_each(|(k, v)| {
-                                    let value = v.resolve(cfg);
-                                    proc.env(k, value);
+                                    proc.env(k, v);
                                 });
         // explicitly set colors:
-        use cargo::core::shell::ColorChoice;
+        use cargo_util_terminal::ColorChoice;
         let color_choice = cfg.shell().color_choice();
         let color = if match color_choice {
             ColorChoice::Always => true,

@@ -3,7 +3,8 @@ use std::collections::BTreeMap;
 use std::path::{PathBuf, Path};
 
 use cargo::CargoResult;
-use cargo::core::{PackageId, Verbosity};
+use cargo::core::PackageId;
+use cargo_util_terminal::Verbosity;
 use anstyle::AnsiColor as Color;
 use anyhow::bail;
 
