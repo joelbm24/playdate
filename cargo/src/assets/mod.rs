@@ -42,10 +42,12 @@ pub struct Artifacts<'t, 'cfg> {
 
 impl Artifacts<'_, '_> {
     pub fn len(&self) -> usize { self.artifacts.len() }
+    #[allow(dead_code)]
     pub fn artifacts(&self) -> &[Artifact] { &self.artifacts }
+    #[allow(dead_code)]
     pub fn index(&self) -> &BTreeMap<plan::RootKey, Vec<usize>> { &self.index }
 
-    pub fn iter(&self) -> impl Iterator<Item = (&RootNode, impl Iterator<Item = &Artifact>)> {
+    pub fn iter(&self) -> impl Iterator<Item = (&RootNode<'_>, impl Iterator<Item = &Artifact>)> {
         self.index
             .iter()
             .flat_map(|(key, index)| {

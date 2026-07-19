@@ -1,5 +1,3 @@
-cargo-features = ["edition2024"]
-
 [package]
 name = "playdate"
 version = "0.2.6"

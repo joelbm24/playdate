@@ -84,6 +84,7 @@ impl Serialize for TargetKind {
 
 
 #[derive(Debug, Clone, Copy)]
+#[allow(dead_code)]
 pub enum TargetKindWild {
     Lib,
     Bin,
@@ -109,6 +110,7 @@ impl PartialEq<TargetKind> for TargetKindWild {
 }
 
 
+#[allow(dead_code)]
 pub fn de_package_id_or_specs<'de, D>(deserializer: D) -> Result<Vec<PackageId>, D::Error>
     where D: Deserializer<'de> {
     let items = Vec::<String>::deserialize(deserializer)?;
@@ -142,14 +144,17 @@ pub fn string_to_package_id<Error: serde::de::Error>(mut line: String) -> Result
            // it also can be PackageIdSpec
            use cargo::core::PackageIdSpec;
 
-           let spec = PackageIdSpec::parse(&line).map_err(Error::custom)?;
-           spec.url()
-               .map(|url| url.as_str())
-               .map(SourceId::from_url)
-               .and_then(|res| res.ok())
-               .map(|src| (spec, src))
-               .and_then(|(spec, src)| spec.version().map(|ver| (spec, src, ver)))
-               .map(|(spec, src, ver)| PackageId::new(spec.name().into(), ver, src))
+           let spec = PackageIdSpec::parse(value).map_err(Error::custom)?;
+           // `spec.url()` has already had its `kind+` prefix (git+/registry+/etc.) and any
+           // git ref query string stripped by `PackageIdSpec::from_url`, so it's no longer
+           // a valid `SourceId::from_url` input on its own (e.g. a git source needs the
+           // `git+...?branch=main` form back). Re-derive the pre-fragment URI directly from
+           // the original spec string instead, same as the legacy fallback below does.
+           let uri = value.rsplit_once('#').map_or(value, |(uri, _)| uri);
+           SourceId::from_url(uri)
+               .ok()
+               .and_then(|src| spec.version().map(|ver| (src, ver)))
+               .map(|(src, ver)| PackageId::new(spec.name().into(), ver, src))
                .ok_or(err)
        })
        .or_else(move |err| {

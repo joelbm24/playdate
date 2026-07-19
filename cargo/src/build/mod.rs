@@ -643,6 +643,7 @@ pub enum BuildProduct {
 
         example: bool,
     },
+    #[allow(dead_code)] // package_id/ck are set for diagnostics but not currently read
     Skip {
         reason: String,
 

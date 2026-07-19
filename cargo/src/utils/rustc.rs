@@ -34,6 +34,7 @@ impl TargetSpec for Rustc {
 pub mod format {
     #[derive(serde::Deserialize, Debug)]
     #[serde(rename_all = "kebab-case")]
+    #[allow(dead_code)] // deserialized from rustc output but not all fields are read yet
     pub struct TargetSpec {
         pub dll_prefix: Option<String>,
         pub dll_suffix: Option<String>,

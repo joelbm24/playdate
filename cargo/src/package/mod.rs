@@ -39,6 +39,7 @@ mod ar;
 
 
 #[derive(Debug)]
+#[allow(dead_code)] // crate_types/targets are populated but not currently read
 pub struct Product {
     pub package_id: PackageId,
     pub crate_types: Vec<CrateType>,

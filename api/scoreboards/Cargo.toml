@@ -1,5 +1,3 @@
-cargo-features = ["edition2024"]
-
 [package]
 name = "playdate-scoreboards"
 version = "0.1.7"

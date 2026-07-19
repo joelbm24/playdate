@@ -31,6 +31,7 @@ pub fn meta_deps<'cfg>(cfg: &'cfg Config<'cfg>) -> CargoResult<MetaDeps<'cfg>> {
 }
 
 
+#[allow(dead_code)] // units/meta kept for potential future use; not directly read outside construction
 pub struct MetaDeps<'cfg> {
     units: &'cfg UnitGraph,
     meta: &'cfg CargoMetadataPd,
@@ -118,6 +119,7 @@ impl<'t> Node<'t> {
     pub fn package_id(&self) -> &'t PackageId { &self.unit.package_id }
 
     pub fn unit(&self) -> &'t Unit { self.unit }
+    #[allow(dead_code)]
     pub fn meta(&self) -> Option<&'t Package<CrateMetadata<InternedString>>> { self.meta }
     pub fn target(&self) -> &'t UnitTarget { &self.unit.target }
 
@@ -174,6 +176,7 @@ impl std::fmt::Display for Node<'_> {
 }
 
 
+#[allow(dead_code)] // several helpers (root_groups, root_for, root_for_wild, units, meta, deps_allowed_for) are unused so far
 impl<'t> MetaDeps<'t> {
     pub fn new(units: &'t UnitGraph, meta: &'t CargoMetadataPd) -> Self {
         let mode_is_build = |u: &&Unit| matches!(u.mode, CompileMode::Build);
@@ -361,7 +364,7 @@ impl<'t> MetaDeps<'t> {
     /// Groups of root-units by target.
     ///
     /// Grouping: (package_id + cargo-target) => [rustc-target].
-    pub fn roots_by_compile_target(&self) -> BTreeMap<TargetKey, BTreeSet<cargo::core::compiler::CompileKind>> {
+    pub fn roots_by_compile_target(&self) -> BTreeMap<TargetKey<'_>, BTreeSet<cargo::core::compiler::CompileKind>> {
         self.roots.iter().fold(BTreeMap::new(), |mut acc, root| {
                              let key = TargetKey::from(root);
                              acc.entry(key).or_default().insert(root.node().unit().platform);
@@ -481,6 +484,7 @@ impl<'t> Node<'t> {
 }
 
 impl<'t> RootNode<'t> {
+    #[allow(dead_code)]
     pub fn into_source(self) -> impl PackageSource<Metadata = MainMetadata<InternedString>> + 't {
         CrateNode::from(&self)
     }
@@ -545,7 +549,7 @@ impl PackageSource for CrateNode<'_> {
     type Authors = [String];
     type Metadata = MainMetadata<InternedString>;
 
-    fn name(&self) -> std::borrow::Cow<str> { self.node.package_id().name().as_str().into() }
+    fn name(&self) -> std::borrow::Cow<'_, str> { self.node.package_id().name().as_str().into() }
 
     fn authors(&self) -> &Self::Authors {
         self.node
@@ -555,7 +559,7 @@ impl PackageSource for CrateNode<'_> {
             .unwrap_or_default()
     }
 
-    fn version(&self) -> std::borrow::Cow<str> {
+    fn version(&self) -> std::borrow::Cow<'_, str> {
         self.node
             .meta
             .as_ref()
@@ -563,7 +567,7 @@ impl PackageSource for CrateNode<'_> {
             .unwrap_or_default()
     }
 
-    fn description(&self) -> Option<std::borrow::Cow<str>> {
+    fn description(&self) -> Option<std::borrow::Cow<'_, str>> {
         self.node
             .meta
             .as_ref()
@@ -583,7 +587,7 @@ impl PackageSource for CrateNode<'_> {
 
     fn examples(&self) -> &[&str] { &self.examples }
 
-    fn manifest_path(&self) -> std::borrow::Cow<std::path::Path> {
+    fn manifest_path(&self) -> std::borrow::Cow<'_, std::path::Path> {
         self.node
             .meta
             .as_ref()

@@ -311,7 +311,7 @@ fn command_aliases<'s, 'c: 's>(cmd: &'c Cmd,
 }
 
 /// Get all aliases for the `arg`, returns tuple: `(short, long)`.
-fn arg_all_aliases(arg: &Arg) -> (impl Iterator<Item = char>, impl Iterator<Item = Cow<str>>) {
+fn arg_all_aliases(arg: &Arg) -> (impl Iterator<Item = char>, impl Iterator<Item = Cow<'_, str>>) {
     let shorts = arg.get_short().into_iter().chain(arg.get_all_short_aliases()
                                                       .into_iter()
                                                       .flat_map(|a| a.into_iter()));

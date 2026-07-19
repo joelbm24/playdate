@@ -15,10 +15,11 @@ pub use self::playdate::*;
 
 pub trait Layout {
     /// The root path
+    #[allow(dead_code)]
     fn root(&self) -> &Path;
 
     /// The destination path for final artifacts
-    fn dest(&self) -> Cow<Path>;
+    fn dest(&self) -> Cow<'_, Path>;
     fn create_dest_dir(&mut self) -> anyhow::Result<()>;
 
     /// Makes sure all directories stored in the Layout exist on the filesystem.
@@ -29,7 +30,7 @@ pub trait Layout {
 
 impl<T: Layout> Layout for &mut T {
     fn root(&self) -> &Path { <T as Layout>::root(self) }
-    fn dest(&self) -> Cow<Path> { <T as Layout>::dest(self) }
+    fn dest(&self) -> Cow<'_, Path> { <T as Layout>::dest(self) }
     fn create_dest_dir(&mut self) -> anyhow::Result<()> { <T as Layout>::create_dest_dir(self) }
     fn prepare(&mut self) -> anyhow::Result<()> { <T as Layout>::prepare(self) }
 }
@@ -37,7 +38,7 @@ impl<T: Layout> Layout for &mut T {
 
 pub trait LayoutLockable: Layout {
     /// The lockfile filename for a build (e.g: `.name-lock`).
-    fn lockfilename(&self) -> Cow<str>;
+    fn lockfilename(&self) -> Cow<'_, str>;
 
     /// Lock the destination directory of the layout.
     /// This function will block if the directory is already locked.
@@ -53,7 +54,7 @@ pub trait LayoutLockable: Layout {
 }
 
 impl<T: LayoutLockable> LayoutLockable for &mut T where T: Layout {
-    fn lockfilename(&self) -> Cow<str> { <T as LayoutLockable>::lockfilename(self) }
+    fn lockfilename(&self) -> Cow<'_, str> { <T as LayoutLockable>::lockfilename(self) }
 }
 
 
@@ -98,7 +99,7 @@ impl<T: Layout> AsMut<T> for LayoutLock<T> {
 
 impl<T: Layout> Layout for LayoutLock<T> {
     fn root(&self) -> &Path { self.layout.root() }
-    fn dest(&self) -> Cow<Path> { self.layout.dest() }
+    fn dest(&self) -> Cow<'_, Path> { self.layout.dest() }
     fn create_dest_dir(&mut self) -> anyhow::Result<()> { self.layout.create_dest_dir() }
     fn prepare(&mut self) -> anyhow::Result<()> { self.layout.prepare() }
     fn clean(&mut self) -> anyhow::Result<()> { self.layout.clean() }

@@ -48,6 +48,7 @@ impl format::UnitTarget {
     }
 
 
+    #[allow(dead_code)]
     pub fn kind_wild(&self) -> TargetKindWild {
         use cargo::core::compiler::CrateType as CT;
 

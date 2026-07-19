@@ -122,6 +122,7 @@ impl<S: DerefMut<Target = Shell>> CargoLogger<S> {
         }
     }
 
+    #[allow(dead_code)]
     pub fn compiler_artifact(&mut self, artifact: Artifact) { self.print_cargo_message(artifact) }
 }
 

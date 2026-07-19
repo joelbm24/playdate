@@ -62,6 +62,7 @@ impl From<&'_ RootNode<'_>> for RootKey {
     }
 }
 impl RootKey {
+    #[allow(dead_code)]
     pub fn dev(&self) -> bool { self.dev }
 
     pub fn is_for(&self, root: &'_ RootNode<'_>) -> bool {

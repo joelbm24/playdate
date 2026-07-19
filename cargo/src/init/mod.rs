@@ -238,6 +238,7 @@ fn bundle_id_from_crate_name(name: &str) -> String {
 }
 
 
+#[allow(dead_code)] // unreachable now that `new`/`init` bail out early (see cli/mod.rs)
 fn cargo_add<'s>(config: &Config<'_>,
                  pwd: &Path,
                  manifest: &Path,

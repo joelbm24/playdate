@@ -18,6 +18,7 @@ use crate::cli::ide::Ide;
 use crate::cli::opts::Mount;
 
 
+#[allow(dead_code)] // some fields (verbose, quiet, create_local_schema) are set but not currently read
 pub struct Config<'cfg> {
     /// Requested command
     pub cmd: Cmd,
